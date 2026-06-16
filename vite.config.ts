@@ -23,15 +23,25 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       /**
-       * Externalize React, the Radix dialog peer, and lucide-react (incl. their
-       * deep imports). Bundled runtime deps (clsx / tailwind-merge / cva) are
-       * intentionally NOT externalized — they ship inside the package.
+       * Externalize React, every Radix peer, lucide-react, and the heavier
+       * third-party UI libs the absorbed primitives wrap (cmdk / embla /
+       * react-day-picker / input-otp / react-resizable-panels / recharts /
+       * sonner) — all declared as peerDependencies and provided by the host.
+       * Bundled runtime deps (clsx / tailwind-merge / cva) are intentionally
+       * NOT externalized — they ship inside the package.
        */
       external: (id) =>
         /^react($|\/)/.test(id) ||
         /^react-dom($|\/)/.test(id) ||
+        /^react-day-picker($|\/)/.test(id) ||
+        /^react-resizable-panels($|\/)/.test(id) ||
         /^@radix-ui\//.test(id) ||
-        /^lucide-react($|\/)/.test(id),
+        /^lucide-react($|\/)/.test(id) ||
+        /^cmdk($|\/)/.test(id) ||
+        /^embla-carousel-react($|\/)/.test(id) ||
+        /^input-otp($|\/)/.test(id) ||
+        /^recharts($|\/)/.test(id) ||
+        /^sonner($|\/)/.test(id),
       output: {
         globals: {
           react: "React",

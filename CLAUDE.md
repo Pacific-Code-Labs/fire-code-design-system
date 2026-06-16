@@ -13,7 +13,7 @@ both `fire-code-fe` and the future admin app render the same brand from one
 source of truth.
 
 - **Stage 1 (done):** tokens + theme engine.
-- **Stage 2 (done, FCR-003):** the UI primitives (Button/Input+Select/
+- **Stage 2 (done, FCR-003):** the branded UI primitives (Button/Input+Select/
   FormField+FormLabel/Card(+Header/Body/Footer/Title/Description)/Badge/Icon/
   Modal/Drawer/OtpInput/Spinner/Pagination/MediaPicker), built token-driven with
   `class-variance-authority` + `clsx`/`tailwind-merge` (`cn`) and re-exported
@@ -21,10 +21,40 @@ source of truth.
   icons resolve through a lucide registry (`Icon name="..."`). Primitives are
   app-agnostic: no app CSS, no app contexts — copy is passed via `labels`
   props and data (MediaPicker gallery/upload) via callbacks.
+- **Stage 2b (done, FCR-003):** absorbed the brand-neutral **shadcn/Radix
+  primitive set** from `fire-code-fe/src/components/ui/*` so every screen builds
+  from one package. These are the kebab-case multi-export files in
+  `components/ui/` (alert, alert-dialog, accordion, aspect-ratio, avatar,
+  breadcrumb, calendar, carousel, chart, checkbox, collapsible, command,
+  context-menu, dropdown-menu, hover-card, label, input-otp, menubar,
+  navigation-menu, popover, progress, radio-group, resizable, scroll-area,
+  separator, sheet, skeleton, slider, sonner, switch, table, tabs, textarea,
+  toggle, toggle-group, tooltip). All adapted to `../../lib/cn` + tokens (no
+  `@/` app imports, no app-only deps — `sonner` takes `theme` as a prop instead
+  of reading `next-themes`; `command` wraps Radix dialog directly since the DS
+  has no raw `Dialog`). The branded primitive stays **canonical** where a
+  shadcn one overlaps: `FormLabel` (canonical) ⟷ `Label` (compat, `./label`),
+  `OtpInput` (canonical) ⟷ `InputOTP*` (compat, `./input-otp`). The third-party
+  libs these wrap (the `@radix-ui/*` set, `cmdk`, `embla-carousel-react`,
+  `react-day-picker`, `input-otp`, `react-resizable-panels`, `recharts`,
+  `sonner`) are **peerDependencies**, externalized in `vite.config.ts`.
 
 **Brand source of truth:** `E:\dev\fire-code-app\BLUE-BOOK.md` (FCR-002).
-**Delivery (decided 2026-06-15):** private npm package + path/workspace alias.
-`"private": true`; never published to the public registry.
+**Delivery (FCR-086, 2026-06-16):** published to **GitHub Packages**
+(`npm.pkg.github.com`, scope `@firecode`) for CI consumers + a `file:` path
+alias for local dev. The package is **NOT** `"private": true` (npm refuses to
+publish that flag, and GH Packages hosts scoped packages fine) — privacy comes
+from the **private GH repo + `@firecode`→GH-Packages scope mapping**, never the
+public npm registry. Publish is release-tag-driven via
+`.github/workflows/publish.yml` (release published / `workflow_dispatch` →
+`setup-node` GH-Packages registry → `bun install` → `bun run build` → `npm
+publish`, `NODE_AUTH_TOKEN=secrets.GITHUB_TOKEN`, `permissions: packages:
+write`). `package.json` carries `publishConfig.registry`, `repository`,
+`prepublishOnly: npm run build`; repo `.npmrc` maps the scope. Consumers add
+their own `.npmrc` (`@firecode:registry=…` +
+`//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}`) and set
+`NODE_AUTH_TOKEN=secrets.GITHUB_TOKEN` with `packages: read` in their deploy
+workflow — see README "Publishing" + "§0 Install from GitHub Packages in CI".
 
 ---
 
@@ -60,9 +90,17 @@ src/
 │   └── index.ts
 └── components/
     ├── index.ts             # → ./ui
-    └── ui/                  # the 12 primitives + index.ts barrel
+    └── ui/                  # PascalCase branded primitives + kebab-case
+                             #   absorbed shadcn set + index.ts barrel
 scripts/copy-css.mjs         # copies tokens.css → dist/tokens.css (the ./styles export)
 ```
+
+**Two file conventions in `components/ui/`:** PascalCase files
+(`Button.tsx`, `Card.tsx`, …) are the hand-built **canonical** branded
+primitives. kebab-case files (`alert-dialog.tsx`, `dropdown-menu.tsx`, …) are
+the absorbed shadcn set (multi-export, generic). When a new component duplicates
+a branded one, keep the branded export canonical and add the shadcn one under
+its own name as a compat alias — never rename/clobber a canonical export.
 
 **Primitive conventions:** every component is a `forwardRef` (where it wraps a
 DOM node), accepts `className` funnelled through `cn` (caller wins), and styles
@@ -156,7 +194,8 @@ change** in this repo you MUST:
    `Won't do` with a cited decision source.
 
 FCR IDs most relevant to this repo: **FCR-003** (this package — tokens + theme
-engine now; primitives next), **FCR-002** (Blue Book brand source of truth),
-**FCR-004** (this CLAUDE.md), **FCR-060/061** (FE app + RBAC UI that consume the
-primitives), **FCR-082/083** (admin app — the second consumer). If your change
-touches one of these, update its row in the same commit/PR.
+engine now; primitives next), **FCR-086** (this package's GitHub Packages
+publishing setup; lineage under FCR-003), **FCR-002** (Blue Book brand source of
+truth), **FCR-004** (this CLAUDE.md), **FCR-060/061** (FE app + RBAC UI that
+consume the primitives), **FCR-082/083** (admin app — the second consumer). If
+your change touches one of these, update its row in the same commit/PR.

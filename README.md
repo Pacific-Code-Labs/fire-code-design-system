@@ -9,9 +9,15 @@ Consumed by:
 - **`fire-code-fe`** — the FireCode CR web app.
 - a **future admin app** (the variant-B private admin repo; FCR-082/083).
 
-Delivery mechanism (decided 2026-06-15): **private npm package + path/workspace
-alias**. The package is `"private": true` and never published to the public
-registry.
+Delivery mechanism: **private npm package on GitHub Packages**
+(`npm.pkg.github.com`) for CI builds + a `file:` path alias for local dev. The
+package stays **private** (the GitHub repo is private and the `@firecode` scope
+resolves to GH Packages — it is never published to the public npm registry).
+
+> **Note on `"private"`:** the manifest does **NOT** set `"private": true` —
+> npm refuses to `publish` a `"private": true` package, and GitHub Packages can
+> host a scoped package perfectly well. Privacy is enforced by the **private GH
+> repo + scope→registry mapping**, not the manifest flag. Keep it omitted.
 
 ---
 
@@ -42,6 +48,65 @@ caller's `className` always wins. Every component re-themes at runtime.
 | `Pagination` | range summary + page-size `Select` + prev/next; **app-agnostic** — copy via `labels` (English defaults). |
 | `MediaPicker` | preview + Select/Change/Clear + library modal (dropzone, URL paste, gallery). **Decoupled** — host injects `gallery`, `onUpload`, `onAddUrl`, `resolveUrl`; stores a plain URL string. |
 
+### Absorbed shadcn / Radix primitives (FCR-003 phase 2)
+
+Brand-neutral, generic primitives absorbed from `fire-code-fe` so every screen
+can build from one package. Same conventions (token-driven, `cva`, `cn`,
+`forwardRef`); each is the kebab-case multi-export shadcn shape. Powered by the
+relevant Radix package (or `cmdk` / `embla-carousel-react` / `react-day-picker`
+/ `input-otp` / `react-resizable-panels` / `recharts` / `sonner`), all declared
+as **peerDependencies** (provided by the host).
+
+| Primitive (exports) | Built on |
+|---|---|
+| `Alert`, `AlertTitle`, `AlertDescription` | div + `cva` |
+| `AlertDialog*` (Trigger/Content/Header/Footer/Title/Description/Action/Cancel/Overlay/Portal) | `@radix-ui/react-alert-dialog` (+ DS `buttonVariants`) |
+| `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` | `@radix-ui/react-accordion` |
+| `AspectRatio` | `@radix-ui/react-aspect-ratio` |
+| `Avatar`, `AvatarImage`, `AvatarFallback` | `@radix-ui/react-avatar` |
+| `Breadcrumb*` (List/Item/Link/Page/Separator/Ellipsis) | div + `@radix-ui/react-slot` |
+| `Calendar` | `react-day-picker` (+ DS `buttonVariants`) |
+| `Carousel`, `CarouselContent`, `CarouselItem`, `CarouselPrevious`, `CarouselNext` | `embla-carousel-react` (+ DS `Button`) |
+| `ChartContainer`, `ChartTooltip(Content)`, `ChartLegend(Content)`, `ChartStyle` | `recharts` |
+| `Checkbox` | `@radix-ui/react-checkbox` |
+| `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent` | `@radix-ui/react-collapsible` |
+| `Command*` (Dialog/Input/List/Empty/Group/Item/Shortcut/Separator) | `cmdk` (+ self-contained Radix dialog wrapper) |
+| `ContextMenu*` | `@radix-ui/react-context-menu` |
+| `DropdownMenu*` | `@radix-ui/react-dropdown-menu` |
+| `HoverCard`, `HoverCardTrigger`, `HoverCardContent` | `@radix-ui/react-hover-card` |
+| `Menubar*` | `@radix-ui/react-menubar` |
+| `NavigationMenu*` (+ `navigationMenuTriggerStyle`) | `@radix-ui/react-navigation-menu` |
+| `Popover`, `PopoverTrigger`, `PopoverContent` | `@radix-ui/react-popover` |
+| `Progress` | `@radix-ui/react-progress` |
+| `RadioGroup`, `RadioGroupItem` | `@radix-ui/react-radio-group` |
+| `ResizablePanelGroup`, `ResizablePanel`, `ResizableHandle` | `react-resizable-panels` |
+| `ScrollArea`, `ScrollBar` | `@radix-ui/react-scroll-area` |
+| `Separator` | `@radix-ui/react-separator` |
+| `Sheet*` (Trigger/Close/Content/Header/Footer/Title/Description/Overlay/Portal) | `@radix-ui/react-dialog` |
+| `Skeleton` | div |
+| `Slider` | `@radix-ui/react-slider` |
+| `Switch` | `@radix-ui/react-switch` |
+| `Table*` (Header/Body/Footer/Head/Row/Cell/Caption) | table |
+| `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` | `@radix-ui/react-tabs` |
+| `Textarea` | textarea |
+| `Toggle` (+ `toggleVariants`) | `@radix-ui/react-toggle` |
+| `ToggleGroup`, `ToggleGroupItem` | `@radix-ui/react-toggle-group` |
+| `Tooltip`, `TooltipTrigger`, `TooltipContent`, `TooltipProvider` | `@radix-ui/react-tooltip` (portaled content) |
+| `Toaster`, `toast` | `sonner` — **app-agnostic**: pass `theme` explicitly (the FE original read `next-themes`, which the DS does not depend on). |
+
+**RECONCILE (duplicates — canonical wins):** the DS keeps its hand-built branded
+primitive as the **canonical** export and ships the shadcn version under its own
+name as a **compatibility alias** so consumers can import either:
+
+| Canonical (DS, authoritative) | shadcn compat alias | Notes |
+|---|---|---|
+| `FormLabel` (+`FormField`) | `Label` (+`labelVariants`, from `./label`) | Prefer `FormLabel` (uppercase `.t-label` micro-label) for brand UI; `Label` is the generic Radix label. |
+| `OtpInput` | `InputOTP`, `InputOTPGroup`, `InputOTPSlot`, `InputOTPSeparator` (from `./input-otp`) | Prefer `OtpInput` (self-contained, no extra dep). `InputOTP*` is the `input-otp`-based compositional API. |
+
+> The `sheet` set was absorbed as a net-new generic overlay; it overlaps the
+> branded `Drawer` conceptually but has a different (compositional) API — both
+> ship. Prefer `Drawer` for branded edit/detail panels.
+
 ### Token contract
 
 The full Blue Book set, defined in **both** light (`:root`) and dark (`.dark`):
@@ -63,9 +128,79 @@ All colours are HSL channel triples (no `hsl()` wrapper) → use as
 
 ---
 
+## Publishing (GitHub Packages)
+
+The package is published to **GitHub Packages** so consumers (`fire-code-fe`,
+`fire-code-admin`) can `install` the **prebuilt** package in their OWN CI — the
+`file:../fire-code-design-system` dev path fails in CI (the sibling repo isn't
+checked out, and its `dist/` is unbuilt).
+
+- `package.json` declares `"publishConfig": { "registry":
+  "https://npm.pkg.github.com" }`, a `"repository"` URL, and a
+  `"prepublishOnly": "npm run build"` so `dist/` is always fresh on publish.
+- The repo `.npmrc` maps the scope: `@firecode:registry=https://npm.pkg.github.com`.
+- The exports map (`main`/`module`/`types`/`exports`) points at the **built
+  `dist/`**, and `files` ships only `dist` (which includes `dist/tokens.css`,
+  the `./styles` export) — a registry consumer gets prebuilt output, no source
+  build required.
+
+**Publish is automated** by `.github/workflows/publish.yml`: on a **published
+GitHub Release** (or manual `workflow_dispatch`) it checks out → `setup-node`
+(`registry-url: https://npm.pkg.github.com`, `scope: '@firecode'`) → `bun
+install` → `bun run build` → `npm publish` with `NODE_AUTH_TOKEN:
+${{ secrets.GITHUB_TOKEN }}` and `permissions: { contents: read, packages:
+write }`. **To cut a release:** bump `version` in `package.json`, commit, then
+create a GitHub Release whose tag matches (e.g. `v0.1.0`). The owner/CI runs the
+publish via the release — do not `npm publish` by hand.
+
 ## How `fire-code-fe` and the admin app consume it
 
-### 1. Add the dependency (alias to the sibling folder)
+### 0. Install from GitHub Packages in CI (the registry path)
+
+This is the path consumer **CI builds** must use (the `file:` path in §1 is
+local-dev only). Each consumer adds an `.npmrc` mapping the `@firecode` scope to
+GH Packages with a token:
+
+```ini
+# .npmrc (in fire-code-fe / fire-code-admin repo root)
+@firecode:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+Then depend on a published version (NOT the `file:` path) in `package.json`:
+
+```jsonc
+{ "dependencies": { "@firecode/design-system": "^0.1.0" } }
+```
+
+In the consumer's deploy workflow, expose the token to install/build steps and
+grant `packages: read`:
+
+```yaml
+permissions:
+  contents: read
+  packages: read          # read the private @firecode package
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - run: bun install   # resolves @firecode/* from GH Packages via .npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: bun run build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+The default `secrets.GITHUB_TOKEN` can read packages owned by the same
+user/org (`chepelcr`). Locally, put a PAT with `read:packages` in your user
+`~/.npmrc` (`//npm.pkg.github.com/:_authToken=<PAT>`) — never commit a token.
+
+### 1. Add the dependency (alias to the sibling folder) — local dev only
 
 Because the package is private and lives as a sibling of `fire-code-fe`, depend
 on it via a path/workspace spec. In the consumer's `package.json`:
@@ -119,9 +254,20 @@ classes (`.panel`, `.glow-red`, `.scanline`, scrollbar/print styles).
 >    `text-primary`, `border-border`, `ring-ring`, `text-muted-foreground`,
 >    `text-accent`, `text-destructive`, plus `font-display`).
 > 2. Install **`tailwindcss-animate`** and add it to `plugins` — `Modal`/`Drawer`
->    use Radix `data-[state=open]`/`data-[state=closed]` with `animate-in` /
->    `animate-out` / `fade-*` / `zoom-*` / `slide-in-from-right` etc.
-> 3. Ensure Tailwind scans the package, e.g. add
+>    and the absorbed overlays/menus (`AlertDialog`, `Sheet`, `DropdownMenu`,
+>    `ContextMenu`, `Menubar`, `NavigationMenu`, `Popover`, `HoverCard`,
+>    `Tooltip`, `Accordion`) use Radix `data-[state=open]`/`data-[state=closed]`
+>    with `animate-in` / `animate-out` / `fade-*` / `zoom-*` /
+>    `slide-in-from-*` etc. `Accordion` additionally needs the
+>    `accordion-up`/`accordion-down` keyframes and `InputOTP` the
+>    `caret-blink` keyframe (the standard shadcn `tailwind.config` keyframes —
+>    keep them in the host config).
+> 3. The absorbed primitives' third-party libs are **peerDependencies** the host
+>    must provide: the `@radix-ui/react-*` set, plus `cmdk`,
+>    `embla-carousel-react`, `react-day-picker`, `input-otp`,
+>    `react-resizable-panels`, `recharts`, `sonner`. `fire-code-fe` already has
+>    all of these.
+> 4. Ensure Tailwind scans the package, e.g. add
 >    `"../fire-code-design-system/src/**/*.{ts,tsx}"` to `content` (or the
 >    built `dist` if consuming the bundle) so the primitive classes aren't
 >    purged.
