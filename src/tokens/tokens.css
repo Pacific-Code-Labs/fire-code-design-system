@@ -1,0 +1,210 @@
+/**
+ * @firecode/design-system — Blue Book token contract.
+ *
+ * The authoritative FireCode CR design tokens, encoded in BOTH light (`:root`)
+ * and dark (`.dark`). Source of truth: `BLUE-BOOK.md` (FCR-002), mirrored from
+ * `fire-code-fe/src/index.css`. Dark is the DEFAULT mode (`<html class="dark">`).
+ *
+ * All colours are HSL channel triples (no `hsl()` wrapper) so they drop straight
+ * into `hsl(var(--token))`. These values are the static defaults; the runtime
+ * theme engine (`applyTheme`) re-writes the same custom properties onto `:root`
+ * for theme switching / CMS overrides. Import this file once in the host app
+ * (e.g. `import "@firecode/design-system/styles";`) before any framework CSS so
+ * Tailwind's base layer can consume the tokens.
+ */
+
+:root {
+  /* ── Core semantic (light) ─────────────────────────────────────────────── */
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  --primary: 8 90% 54%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 8 95% 62%;
+
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 42%;
+
+  --accent: 200 95% 45%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 214 32% 88%;
+  --input: 214 32% 90%;
+  --ring: 8 90% 54%;
+
+  --radius: 0.6rem;
+
+  /* ── Domain: fire-protection categories (light) ────────────────────────── */
+  --cat-initiation: 0 84% 55%;
+  --cat-notification: 42 95% 48%;
+  --cat-monitoring: 210 95% 50%;
+  --cat-actuation: 142 70% 40%;
+
+  /* ── Risk (light) ──────────────────────────────────────────────────────── */
+  --risk-high: 0 84% 55%;
+  --risk-medium: 38 92% 48%;
+  --risk-low: 142 65% 40%;
+
+  /* ── Gradients / shadows (light) ───────────────────────────────────────── */
+  --gradient-hero: radial-gradient(ellipse at top, hsl(8 90% 54% / 0.10), transparent 60%),
+                   linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
+  --gradient-panel: linear-gradient(160deg, hsl(0 0% 100%), hsl(210 40% 98%));
+  --shadow-glow: 0 0 0 1px hsl(8 90% 54% / 0.20), 0 12px 40px -12px hsl(8 90% 54% / 0.30);
+  --shadow-panel: 0 10px 30px -15px hsl(222 47% 11% / 0.15);
+
+  /* ── Sidebar family (light) ────────────────────────────────────────────── */
+  --sidebar-background: 210 40% 98%;
+  --sidebar-foreground: 222 30% 25%;
+  --sidebar-primary: 8 90% 54%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 40% 94%;
+  --sidebar-accent-foreground: 222 47% 11%;
+  --sidebar-border: 214 32% 88%;
+  --sidebar-ring: 8 90% 54%;
+
+  /* ── Typography (set/overridden by the theme engine) ───────────────────── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --font-display: "Barlow Condensed", "Barlow", "Arial Narrow", sans-serif;
+}
+
+.dark {
+  /* ── Core semantic (dark — DEFAULT) ────────────────────────────────────── */
+  --background: 222 30% 7%;
+  --foreground: 210 40% 96%;
+
+  --card: 222 28% 10%;
+  --card-foreground: 210 40% 96%;
+
+  --popover: 222 28% 10%;
+  --popover-foreground: 210 40% 96%;
+
+  --primary: 8 90% 58%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 8 95% 65%;
+
+  --secondary: 222 25% 14%;
+  --secondary-foreground: 210 40% 96%;
+
+  --muted: 222 22% 14%;
+  --muted-foreground: 215 18% 65%;
+
+  --accent: 200 95% 55%;
+  --accent-foreground: 222 47% 8%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 222 25% 18%;
+  --input: 222 25% 16%;
+  --ring: 8 90% 58%;
+
+  /* ── Domain: fire-protection categories (dark) ─────────────────────────── */
+  --cat-initiation: 0 84% 60%;
+  --cat-notification: 42 95% 58%;
+  --cat-monitoring: 210 95% 60%;
+  --cat-actuation: 142 70% 48%;
+
+  /* ── Risk (dark) ───────────────────────────────────────────────────────── */
+  --risk-high: 0 84% 60%;
+  --risk-medium: 38 92% 55%;
+  --risk-low: 142 65% 48%;
+
+  /* ── Gradients / shadows (dark) ────────────────────────────────────────── */
+  --gradient-hero: radial-gradient(ellipse at top, hsl(8 90% 58% / 0.18), transparent 60%),
+                   linear-gradient(180deg, hsl(222 30% 7%), hsl(222 35% 5%));
+  --gradient-panel: linear-gradient(160deg, hsl(222 28% 11%), hsl(222 30% 8%));
+  --shadow-glow: 0 0 0 1px hsl(8 90% 58% / 0.25), 0 12px 40px -12px hsl(8 90% 58% / 0.45);
+  --shadow-panel: 0 10px 30px -15px hsl(0 0% 0% / 0.6);
+
+  /* ── Sidebar family (dark) ─────────────────────────────────────────────── */
+  --sidebar-background: 222 32% 6%;
+  --sidebar-foreground: 210 30% 80%;
+  --sidebar-primary: 8 90% 58%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 222 25% 12%;
+  --sidebar-accent-foreground: 210 40% 96%;
+  --sidebar-border: 222 25% 14%;
+  --sidebar-ring: 8 90% 58%;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Typography scale (brand utilities)
+
+   FireCode's instrument-grade type scale, consumed by the design-system
+   primitives (CardTitle → .t-h4, FormLabel → .t-label, …) and available to
+   host apps. Headings use the display grotesque (`--font-display`, Barlow
+   Condensed) with tight tracking; body/UI uses `--font-sans` (Inter). Defined
+   as plain CSS (not Tailwind utilities) so they work whether or not the host
+   pipes this file through Tailwind. Colour inherits `currentColor` so they sit
+   on any token surface.
+   ════════════════════════════════════════════════════════════════════════ */
+
+.t-h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.35rem);
+  line-height: 1.08;
+  letter-spacing: -0.018em;
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem);
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+}
+
+.t-h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.t-sm {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.t-label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
