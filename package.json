@@ -1,12 +1,12 @@
 {
-  "name": "@firecode/design-system",
-  "version": "0.1.0",
+  "name": "@pacific-code-labs/fire-code-design-system",
+  "version": "0.1.1",
   "type": "module",
   "description": "FireCode CR shared design system — Blue Book token contract + runtime theme engine (override > org > default). Consumed by fire-code-fe and the future admin app.",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chepelcr/fire-code-design-system.git"
+    "url": "git+https://github.com/Pacific-Code-Labs/fire-code-design-system.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
