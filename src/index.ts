@@ -29,3 +29,6 @@ export * from "./layout";
 
 // Anonymous published-content reads (public-api, identity-pool guests + SigV4).
 export * from "./content";
+
+// Brand lockup driven by the branding content document (logos uploaded in the admin).
+export * from "./brand";
