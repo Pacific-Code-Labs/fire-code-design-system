@@ -18,7 +18,7 @@ There is no build step and no registry. Consumers install a tag and compile the 
 their own Vite:
 
 ```jsonc
-{ "dependencies": { "@pacific-code-labs/fire-code-design-system": "github:Pacific-Code-Labs/fire-code-design-system#v0.2.0" } }
+{ "dependencies": { "@pacific-code-labs/fire-code-design-system": "github:Pacific-Code-Labs/fire-code-design-system#v0.3.0" } }
 ```
 
 ```ts
