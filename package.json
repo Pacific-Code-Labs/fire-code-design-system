@@ -1,6 +1,6 @@
 {
   "name": "@pacific-code-labs/fire-code-design-system",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "description": "FireCode CR shared design system — tokens, Tailwind preset, primitives, theme engine, i18n runtime, app shell and published-content reader. Installed as TypeScript source from a git tag.",
   "license": "UNLICENSED",

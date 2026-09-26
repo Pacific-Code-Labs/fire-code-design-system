@@ -13,7 +13,7 @@ export interface BrandLogoProps {
   /** Standalone symbol (L3) for `variant="mark"`. Empty → icon fallback. */
   markUrl?: string;
   /** Icon shown while no logo/mark has been uploaded. */
-  Icon?: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
+  Icon?: ComponentType<{ className?: string }>;
   variant?: "full" | "mark";
   /** Height of the wordmark image / size of the mark, as Tailwind classes. */
   imgClassName?: string;
@@ -40,7 +40,13 @@ export function BrandLogo({
     if (markUrl) return <img src={markUrl} alt={name} className={cn("h-8 w-8 object-contain", imgClassName, className)} />;
     return (
       <span className={cn("inline-flex h-8 w-8 items-center justify-center rounded-md border border-primary/30 bg-primary/10", className)}>
-        {Icon ? <Icon className="h-4 w-4 text-primary" aria-hidden /> : <span className="text-sm font-bold text-primary">{name.charAt(0)}</span>}
+        {Icon ? (
+          <span aria-hidden="true" className="inline-flex">
+            <Icon className="h-4 w-4 text-primary" />
+          </span>
+        ) : (
+          <span className="text-sm font-bold text-primary">{name.charAt(0)}</span>
+        )}
       </span>
     );
   }
