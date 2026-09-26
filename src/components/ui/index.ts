@@ -215,3 +215,16 @@ export { Textarea, type TextareaProps } from "./textarea";
 export { Toggle, toggleVariants } from "./toggle";
 export { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./tooltip";
+
+// ── Runtime helpers (app-separation) ───────────────────────────────────────
+export { Hint, type HintProps } from "./Hint";
+export { ActivityBar } from "./activity-bar";
+export {
+  SkeletonText,
+  ListSkeleton,
+  TableSkeleton,
+  StatGridSkeleton,
+  DetailSkeleton,
+  FormSkeleton,
+  ShellSkeleton,
+} from "./skeleton-layouts";

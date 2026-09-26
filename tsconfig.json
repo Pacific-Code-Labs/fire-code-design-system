@@ -7,10 +7,8 @@
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
 
-    /* Library emit: types only — Vite bundles the JS. */
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./dist",
+    /* Shipped as TS source: consumers compile it; this config only typechecks. */
+    "noEmit": true,
     "rootDir": "./src",
 
     "strict": true,

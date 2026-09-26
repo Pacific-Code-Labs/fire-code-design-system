@@ -20,3 +20,12 @@ export * from "./lib";
 
 // UI primitives (Button/Input/FormField/Card/Badge/Icon/Modal/Drawer/…).
 export * from "./components";
+
+// i18n runtime: LanguageProvider/useLanguage, Localized<T>, rich text.
+export * from "./i18n";
+
+// Sidebar application layout.
+export * from "./layout";
+
+// Anonymous published-content reads (public-api, identity-pool guests + SigV4).
+export * from "./content";
