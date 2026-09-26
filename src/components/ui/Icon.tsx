@@ -79,12 +79,12 @@ const ALIASES: Record<string, string> = {
 
 const warned = new Set<string>();
 
-/** Best-effort dev detection without relying on bundler-specific globals. */
+/** Best-effort dev detection without relying on bundler-specific globals (or @types/node:
+ *  consumers compile this source with their own tsconfig). */
 function isDev(): boolean {
   try {
-    return (
-      typeof process !== "undefined" && process.env?.NODE_ENV !== "production"
-    );
+    const env = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env;
+    return !!env && env.NODE_ENV !== "production";
   } catch {
     return false;
   }
