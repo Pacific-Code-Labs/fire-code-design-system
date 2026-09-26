@@ -40,34 +40,22 @@ source of truth.
   `sonner`) are **peerDependencies**, externalized in `vite.config.ts`.
 
 **Brand source of truth:** `E:\dev\fire-code-app\BLUE-BOOK.md` (FCR-002).
-**Delivery (FCR-086, 2026-06-16):** published to **GitHub Packages**
-(`npm.pkg.github.com`, scope `@firecode`) for CI consumers + a `file:` path
-alias for local dev. The package is **NOT** `"private": true` (npm refuses to
-publish that flag, and GH Packages hosts scoped packages fine) — privacy comes
-from the **private GH repo + `@firecode`→GH-Packages scope mapping**, never the
-public npm registry. Publish is release-tag-driven via
-`.github/workflows/publish.yml` (release published / `workflow_dispatch` →
-`setup-node` GH-Packages registry → `bun install` → `bun run build` → `npm
-publish`, `NODE_AUTH_TOKEN=secrets.GITHUB_TOKEN`, `permissions: packages:
-write`). `package.json` carries `publishConfig.registry`, `repository`,
-`prepublishOnly: npm run build`; repo `.npmrc` maps the scope. Consumers add
-their own `.npmrc` (`@firecode:registry=…` +
-`//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}`) and set
-`NODE_AUTH_TOKEN=secrets.GITHUB_TOKEN` with `packages: read` in their deploy
-workflow — see README "Publishing" + "§0 Install from GitHub Packages in CI".
+**Delivery (v0.2.0, app-separation):** shipped as **TypeScript source installed from a git
+tag** (`github:Pacific-Code-Labs/fire-code-design-system#vX.Y.Z`). No build, no `dist/`, no
+GitHub Packages, no `.npmrc` token. `exports` point at `src/`; consumers compile it with their
+own Vite and scan `src/**` through the Tailwind preset's `dsContent`. CI
+(`.github/workflows/typecheck.yml`) only typechecks. Release = bump `version`, commit, tag,
+push the tag, bump the tag in each consumer (see README).
 
 ---
 
 ## 2. Tech stack
 
-- **TypeScript + React 18** (peer deps; `react`/`react-dom` are NOT bundled).
-- **Vite library mode** → ESM (`index.js`) + CJS (`index.cjs`); **`tsc
-  --emitDeclarationOnly`** → `index.d.ts`; `scripts/copy-css.mjs` →
-  `dist/tokens.css`.
-- Package manager: **Bun** (matches `fire-code-fe`); `npm` works too.
+- **TypeScript + React 18** (peer deps), Tailwind 3 (+ `tailwindcss-animate`) via `tailwind.preset.js`.
+- No build: `package.json` `exports` → `src/index.ts`, `src/tokens/tokens.css`, `tailwind.preset.js`.
+- Package manager: **pnpm** (`packageManager`), Node 24 in CI.
 
-Commands: `bun run build`, `bun run dev` (watch), `bun run typecheck`,
-`bun run build:css`.
+Commands: `pnpm install`, `pnpm typecheck`.
 
 ---
 
@@ -88,11 +76,14 @@ src/
 ├── lib/
 │   ├── cn.ts                # clsx + tailwind-merge combiner (overrides win predictably)
 │   └── index.ts
-└── components/
-    ├── index.ts             # → ./ui
-    └── ui/                  # PascalCase branded primitives + kebab-case
-                             #   absorbed shadcn set + index.ts barrel
-scripts/copy-css.mjs         # copies tokens.css → dist/tokens.css (the ./styles export)
+├── components/
+│   ├── index.ts             # → ./ui
+│   └── ui/                  # PascalCase branded primitives + kebab-case absorbed shadcn set,
+│                            #   Hint, ActivityBar, skeleton-layouts + index.ts barrel
+├── i18n/                    # LanguageProvider (/:lang URL prefix or in place), Localized<T>, rich text
+├── layout/                  # AppShell (collapsible sidebar, mobile drawer, <main id="page-content">)
+└── content/                 # public-content.ts: identity-pool guest + SigV4 reads of published content
+tailwind.preset.js           # Tailwind 3 preset (token colors, radius, animations) + dsContent globs
 ```
 
 **Two file conventions in `components/ui/`:** PascalCase files
@@ -110,8 +101,12 @@ ONLY via Tailwind semantic-token classes (`bg-card`, `text-primary`,
 app CSS or app contexts — keep them portable across `fire-code-fe` and admin.
 
 **Export surface** (`package.json` `exports`):
-- `@firecode/design-system` → the JS/types barrel (token types + theme engine).
-- `@firecode/design-system/styles` (and `/tokens.css`) → `dist/tokens.css`.
+- `@pacific-code-labs/fire-code-design-system` → `src/index.ts` (everything above).
+- `…/styles` (and `/tokens.css`) → `src/tokens/tokens.css`.
+- `…/tailwind-preset` → `tailwind.preset.js`.
+
+**Loading states rule:** data loading shows a skeleton shaped like the content
+(`skeleton-layouts`), never a centred spinner; `Spinner` is only for the control that is acting.
 
 The JS barrel is **side-effect-free** — never `import "./tokens/tokens.css"`
 from it. Hosts import the stylesheet explicitly via the `./styles` export.

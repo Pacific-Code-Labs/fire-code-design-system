@@ -1,43 +1,30 @@
 {
   "name": "@pacific-code-labs/fire-code-design-system",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
-  "description": "FireCode CR shared design system — Blue Book token contract + runtime theme engine (override > org > default). Consumed by fire-code-fe and the future admin app.",
+  "description": "FireCode CR shared design system — tokens, Tailwind preset, primitives, theme engine, i18n runtime, app shell and published-content reader. Installed as TypeScript source from a git tag.",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Pacific-Code-Labs/fire-code-design-system.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "sideEffects": [
     "**/*.css"
   ],
   "files": [
-    "dist"
+    "src",
+    "tailwind.preset.js"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./styles": "./dist/tokens.css",
-    "./tokens.css": "./dist/tokens.css",
+    ".": "./src/index.ts",
+    "./styles": "./src/tokens/tokens.css",
+    "./tokens.css": "./src/tokens/tokens.css",
+    "./tailwind-preset": "./tailwind.preset.js",
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.json --emitDeclarationOnly && node scripts/copy-css.mjs",
-    "build:types": "tsc -p tsconfig.json --emitDeclarationOnly",
-    "build:css": "node scripts/copy-css.mjs",
-    "dev": "vite build --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "clean": "rimraf dist",
-    "prepublishOnly": "npm run build"
+    "check": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -79,44 +66,122 @@
     "react-dom": "^18.0.0 || ^19.0.0",
     "react-resizable-panels": "^2.1.0",
     "recharts": "^2.15.0",
-    "sonner": "^1.5.0"
+    "sonner": "^1.5.0",
+    "tailwindcss": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "peerDependenciesMeta": {
-    "@radix-ui/react-accordion": { "optional": false },
-    "@radix-ui/react-alert-dialog": { "optional": false },
-    "@radix-ui/react-aspect-ratio": { "optional": false },
-    "@radix-ui/react-avatar": { "optional": false },
-    "@radix-ui/react-checkbox": { "optional": false },
-    "@radix-ui/react-collapsible": { "optional": false },
-    "@radix-ui/react-context-menu": { "optional": false },
-    "@radix-ui/react-dialog": { "optional": false },
-    "@radix-ui/react-dropdown-menu": { "optional": false },
-    "@radix-ui/react-hover-card": { "optional": false },
-    "@radix-ui/react-label": { "optional": false },
-    "@radix-ui/react-menubar": { "optional": false },
-    "@radix-ui/react-navigation-menu": { "optional": false },
-    "@radix-ui/react-popover": { "optional": false },
-    "@radix-ui/react-progress": { "optional": false },
-    "@radix-ui/react-radio-group": { "optional": false },
-    "@radix-ui/react-scroll-area": { "optional": false },
-    "@radix-ui/react-separator": { "optional": false },
-    "@radix-ui/react-slider": { "optional": false },
-    "@radix-ui/react-slot": { "optional": false },
-    "@radix-ui/react-switch": { "optional": false },
-    "@radix-ui/react-tabs": { "optional": false },
-    "@radix-ui/react-toggle": { "optional": false },
-    "@radix-ui/react-toggle-group": { "optional": false },
-    "@radix-ui/react-tooltip": { "optional": false },
-    "cmdk": { "optional": false },
-    "embla-carousel-react": { "optional": false },
-    "input-otp": { "optional": false },
-    "lucide-react": { "optional": false },
-    "react": { "optional": false },
-    "react-day-picker": { "optional": false },
-    "react-dom": { "optional": false },
-    "react-resizable-panels": { "optional": false },
-    "recharts": { "optional": false },
-    "sonner": { "optional": false }
+    "@radix-ui/react-accordion": {
+      "optional": false
+    },
+    "@radix-ui/react-alert-dialog": {
+      "optional": false
+    },
+    "@radix-ui/react-aspect-ratio": {
+      "optional": false
+    },
+    "@radix-ui/react-avatar": {
+      "optional": false
+    },
+    "@radix-ui/react-checkbox": {
+      "optional": false
+    },
+    "@radix-ui/react-collapsible": {
+      "optional": false
+    },
+    "@radix-ui/react-context-menu": {
+      "optional": false
+    },
+    "@radix-ui/react-dialog": {
+      "optional": false
+    },
+    "@radix-ui/react-dropdown-menu": {
+      "optional": false
+    },
+    "@radix-ui/react-hover-card": {
+      "optional": false
+    },
+    "@radix-ui/react-label": {
+      "optional": false
+    },
+    "@radix-ui/react-menubar": {
+      "optional": false
+    },
+    "@radix-ui/react-navigation-menu": {
+      "optional": false
+    },
+    "@radix-ui/react-popover": {
+      "optional": false
+    },
+    "@radix-ui/react-progress": {
+      "optional": false
+    },
+    "@radix-ui/react-radio-group": {
+      "optional": false
+    },
+    "@radix-ui/react-scroll-area": {
+      "optional": false
+    },
+    "@radix-ui/react-separator": {
+      "optional": false
+    },
+    "@radix-ui/react-slider": {
+      "optional": false
+    },
+    "@radix-ui/react-slot": {
+      "optional": false
+    },
+    "@radix-ui/react-switch": {
+      "optional": false
+    },
+    "@radix-ui/react-tabs": {
+      "optional": false
+    },
+    "@radix-ui/react-toggle": {
+      "optional": false
+    },
+    "@radix-ui/react-toggle-group": {
+      "optional": false
+    },
+    "@radix-ui/react-tooltip": {
+      "optional": false
+    },
+    "cmdk": {
+      "optional": false
+    },
+    "embla-carousel-react": {
+      "optional": false
+    },
+    "input-otp": {
+      "optional": false
+    },
+    "lucide-react": {
+      "optional": false
+    },
+    "react": {
+      "optional": false
+    },
+    "react-day-picker": {
+      "optional": false
+    },
+    "react-dom": {
+      "optional": false
+    },
+    "react-resizable-panels": {
+      "optional": false
+    },
+    "recharts": {
+      "optional": false
+    },
+    "sonner": {
+      "optional": false
+    },
+    "tailwindcss": {
+      "optional": true
+    },
+    "tailwindcss-animate": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
@@ -156,9 +221,10 @@
     "react-dom": "^18.3.1",
     "react-resizable-panels": "^2.1.9",
     "recharts": "^2.15.4",
-    "rimraf": "^6.0.1",
     "sonner": "^1.7.4",
     "typescript": "^5.8.3",
-    "vite": "^5.4.19"
-  }
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "packageManager": "pnpm@10.33.2"
 }
