@@ -1,11 +1,11 @@
 /**
- * @firecode/design-system — public entry (barrel).
+ * @pacific-code-labs/sokol-design-system — public entry (barrel).
  *
  * Stage 1: the Blue Book token contract + the runtime theme engine.
  * Stage 2 (FCR-003): the token-driven UI primitives + the `cn` helper.
  *
  * The token stylesheet is a SEPARATE export — import it once in the host app:
- *   import "@firecode/design-system/styles";
+ *   import "@pacific-code-labs/sokol-design-system/styles";
  * (do NOT import it from this barrel, to keep the JS entry side-effect-free).
  */
 

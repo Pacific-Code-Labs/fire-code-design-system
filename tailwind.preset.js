@@ -1,9 +1,9 @@
 /**
- * Tailwind 3 preset for FireCode CR. Maps the token CSS variables (src/tokens/tokens.css)
+ * Tailwind 3 preset for Sóköl. Maps the token CSS variables (src/tokens/tokens.css)
  * to Tailwind colors so every frontend (landing, app, admin) shares one theme.
  *
  *   // tailwind.config.ts
- *   import preset from "@pacific-code-labs/fire-code-design-system/tailwind-preset";
+ *   import preset from "@pacific-code-labs/sokol-design-system/tailwind-preset";
  *   export default {
  *     presets: [preset],
  *     content: ["./index.html", "./src/**\/*.{ts,tsx}", ...preset.dsContent],
@@ -20,7 +20,7 @@ const pair = (name) => ({ DEFAULT: token(name), foreground: token(`${name}-foreg
 const preset = {
   darkMode: ["class"],
   content: [],
-  dsContent: ["./node_modules/@pacific-code-labs/fire-code-design-system/src/**/*.{ts,tsx}"],
+  dsContent: ["./node_modules/@pacific-code-labs/sokol-design-system/src/**/*.{ts,tsx}"],
   theme: {
     container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
     extend: {

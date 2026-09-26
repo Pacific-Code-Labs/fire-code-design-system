@@ -1,15 +1,15 @@
 /**
- * @firecode/design-system — Blue Book token contract.
+ * @pacific-code-labs/sokol-design-system — Blue Book token contract.
  *
- * The authoritative FireCode CR design tokens, encoded in BOTH light (`:root`)
+ * The authoritative Sóköl design tokens, encoded in BOTH light (`:root`)
  * and dark (`.dark`). Source of truth: `BLUE-BOOK.md` (FCR-002), mirrored from
- * `fire-code-fe/src/index.css`. Dark is the DEFAULT mode (`<html class="dark">`).
+ * `sokol/src/index.css`. Dark is the DEFAULT mode (`<html class="dark">`).
  *
  * All colours are HSL channel triples (no `hsl()` wrapper) so they drop straight
  * into `hsl(var(--token))`. These values are the static defaults; the runtime
  * theme engine (`applyTheme`) re-writes the same custom properties onto `:root`
  * for theme switching / CMS overrides. Import this file once in the host app
- * (e.g. `import "@firecode/design-system/styles";`) before any framework CSS so
+ * (e.g. `import "@pacific-code-labs/sokol-design-system/styles";`) before any framework CSS so
  * Tailwind's base layer can consume the tokens.
  */
 
@@ -143,7 +143,7 @@
 /* ════════════════════════════════════════════════════════════════════════
    Typography scale (brand utilities)
 
-   FireCode's instrument-grade type scale, consumed by the design-system
+   Sóköl's instrument-grade type scale, consumed by the design-system
    primitives (CardTitle → .t-h4, FormLabel → .t-label, …) and available to
    host apps. Headings use the display grotesque (`--font-display`, Barlow
    Condensed) with tight tracking; body/UI uses `--font-sans` (Inter). Defined

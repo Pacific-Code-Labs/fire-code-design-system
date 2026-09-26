@@ -1,5 +1,5 @@
 /**
- * `cn` — the canonical class-name combiner for FireCode primitives.
+ * `cn` — the canonical class-name combiner for Sóköl primitives.
  *
  * `clsx` resolves conditional/array/object class inputs; `tailwind-merge` then
  * dedupes conflicting Tailwind utilities so a caller's `className` always wins

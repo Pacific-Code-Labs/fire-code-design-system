@@ -1,5 +1,5 @@
 /**
- * FireCode UI primitives (FCR-003).
+ * Sóköl UI primitives (FCR-003).
  *
  * Token-driven, CVA-variant, tailwind-merge-friendly building blocks. Every
  * colour is `hsl(var(--token))` so the whole set re-themes at runtime via the
@@ -7,7 +7,7 @@
  * the Icon registry. No app CSS, no app contexts — copy/labels are injected.
  *
  * Two tiers ship here:
- *  1. The hand-built, branded FireCode primitives (PascalCase: Button, Card,
+ *  1. The hand-built, branded Sóköl primitives (PascalCase: Button, Card,
  *     Input/Select, FormField/FormLabel, Modal, Drawer, OtpInput, Pagination,
  *     MediaPicker, Badge, Spinner, Icon) — the CANONICAL set.
  *  2. The brand-neutral shadcn/Radix primitives absorbed from the app
@@ -18,7 +18,7 @@
  *       - OtpInput  (canonical) ⟷ InputOTP* (shadcn compat, from ./input-otp)
  */
 
-// ── Canonical FireCode primitives ─────────────────────────────────────────
+// ── Canonical Sóköl primitives ─────────────────────────────────────────
 export { Icon, resolveIcon, type IconProps } from "./Icon";
 export { Button, buttonVariants, type ButtonProps } from "./Button";
 export { Input, Select, fieldVariants, type InputProps, type SelectProps } from "./Input";

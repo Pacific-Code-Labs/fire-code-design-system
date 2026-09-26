@@ -1,14 +1,14 @@
 /**
- * FireCode CR theme registry.
+ * Sóköl theme registry.
  *
  * Each `ThemeDef` carries a `light` and a `dark` `TokenMap` over the SAME token
  * contract defined in `../tokens/contract.ts`, plus `radius` and `fonts`, so
  * `applyTheme(themeId, isDark)` can write each entry onto
  * `document.documentElement` and lazily inject the theme's Google Fonts.
  *
- * The `firecode` theme is the brand default and mirrors `tokens.css` /
+ * The `sokol` theme is the brand default and mirrors `tokens.css` /
  * `BLUE-BOOK.md` exactly (so selecting it is a visual no-op against the static
- * stylesheet). `firecode-light` is a light-first demo/alt variant that swaps the
+ * stylesheet). `sokol-light` is a light-first demo/alt variant that swaps the
  * default mode emphasis — useful for the theme gallery and for orgs that prefer
  * a light surface. Add new org/CMS themes here keyed by a stable id.
  *
@@ -40,14 +40,14 @@ export interface ThemeDef {
 }
 
 // Brand fonts per Blue Book §3 (technical grotesque body, condensed display).
-const FIRECODE_FONTS: ThemeFonts = {
+const SOKOL_FONTS: ThemeFonts = {
   sans: '"Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   display: '"Barlow Condensed", "Barlow", "Arial Narrow", sans-serif',
   googleFonts: ["Inter:wght@400;500;600;700;800", "Barlow+Condensed:wght@600;700;800"],
 };
 
 // ─── Light token map (mirrors tokens.css :root) ──────────────────────────────
-const FIRECODE_LIGHT: TokenMap = {
+const SOKOL_LIGHT: TokenMap = {
   background: "0 0% 100%",
   foreground: "222 47% 11%",
   card: "0 0% 100%",
@@ -92,7 +92,7 @@ const FIRECODE_LIGHT: TokenMap = {
 };
 
 // ─── Dark token map (mirrors tokens.css .dark — product default) ─────────────
-const FIRECODE_DARK: TokenMap = {
+const SOKOL_DARK: TokenMap = {
   background: "222 30% 7%",
   foreground: "210 40% 96%",
   card: "222 28% 10%",
@@ -137,13 +137,13 @@ const FIRECODE_DARK: TokenMap = {
 };
 
 /** Brand default — the canonical Blue Book palette (dark-first). */
-const firecode: ThemeDef = {
-  id: "firecode",
-  name: "FireCode CR",
-  fonts: FIRECODE_FONTS,
+const sokol: ThemeDef = {
+  id: "sokol",
+  name: "Sóköl",
+  fonts: SOKOL_FONTS,
   radius: "0.6rem",
-  light: FIRECODE_LIGHT,
-  dark: FIRECODE_DARK,
+  light: SOKOL_LIGHT,
+  dark: SOKOL_DARK,
 };
 
 /**
@@ -152,13 +152,13 @@ const firecode: ThemeDef = {
  * a sensible alt for orgs that prefer a light surface. Dark map reuses the brand
  * dark so toggling dark mode stays on-brand.
  */
-const firecodeLight: ThemeDef = {
-  id: "firecode-light",
-  name: "FireCode Light",
-  fonts: FIRECODE_FONTS,
+const sokolLight: ThemeDef = {
+  id: "sokol-light",
+  name: "Sóköl Light",
+  fonts: SOKOL_FONTS,
   radius: "0.6rem",
   light: {
-    ...FIRECODE_LIGHT,
+    ...SOKOL_LIGHT,
     background: "210 40% 99%",
     secondary: "210 40% 94%",
     muted: "210 40% 94%",
@@ -166,20 +166,20 @@ const firecodeLight: ThemeDef = {
     "gradient-hero":
       "radial-gradient(ellipse at top, hsl(200 95% 45% / 0.08), transparent 60%), linear-gradient(180deg, hsl(210 40% 99%), hsl(210 40% 96%))",
   },
-  dark: FIRECODE_DARK,
+  dark: SOKOL_DARK,
 };
 
 /** All themes keyed by id. */
 export const THEMES: Record<string, ThemeDef> = {
-  firecode,
-  "firecode-light": firecodeLight,
+  sokol,
+  "sokol-light": sokolLight,
 };
 
 /** Ordered theme list for galleries — default first. */
-export const THEME_LIST: ThemeDef[] = [firecode, firecodeLight];
+export const THEME_LIST: ThemeDef[] = [sokol, sokolLight];
 
 /** Fallback theme id when an org has no theme / an unknown one. */
-export const DEFAULT_THEME_ID = "firecode";
+export const DEFAULT_THEME_ID = "sokol";
 
 /** Type guard: is `id` a known theme id? */
 export function isKnownThemeId(id: string | undefined | null): id is string {

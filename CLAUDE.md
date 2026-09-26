@@ -1,4 +1,4 @@
-# CLAUDE.md — `fire-code-design-system` (`@firecode/design-system`)
+# CLAUDE.md — `sokol-design-system` (`@pacific-code-labs/sokol-design-system`)
 
 Guidance for AI agents (and humans) working in this repo. Read this before
 making changes.
@@ -7,9 +7,9 @@ making changes.
 
 ## 1. Purpose
 
-`@firecode/design-system` is the **shared, private** design system for FireCode
+`@pacific-code-labs/sokol-design-system` is the **shared, private** design system for Sóköl
 CR. It owns the **Blue Book token contract** and a **runtime theme engine**, so
-both `fire-code-fe` and the future admin app render the same brand from one
+both `sokol` and the future admin app render the same brand from one
 source of truth.
 
 - **Stage 1 (done):** tokens + theme engine.
@@ -22,7 +22,7 @@ source of truth.
   app-agnostic: no app CSS, no app contexts — copy is passed via `labels`
   props and data (MediaPicker gallery/upload) via callbacks.
 - **Stage 2b (done, FCR-003):** absorbed the brand-neutral **shadcn/Radix
-  primitive set** from `fire-code-fe/src/components/ui/*` so every screen builds
+  primitive set** from `sokol/src/components/ui/*` so every screen builds
   from one package. These are the kebab-case multi-export files in
   `components/ui/` (alert, alert-dialog, accordion, aspect-ratio, avatar,
   breadcrumb, calendar, carousel, chart, checkbox, collapsible, command,
@@ -39,9 +39,9 @@ source of truth.
   `react-day-picker`, `input-otp`, `react-resizable-panels`, `recharts`,
   `sonner`) are **peerDependencies**, externalized in `vite.config.ts`.
 
-**Brand source of truth:** `E:\dev\fire-code-app\BLUE-BOOK.md` (FCR-002).
+**Brand source of truth:** `E:\dev\sokol-app\BLUE-BOOK.md` (FCR-002).
 **Delivery (v0.2.0, app-separation):** shipped as **TypeScript source installed from a git
-tag** (`github:Pacific-Code-Labs/fire-code-design-system#vX.Y.Z`). No build, no `dist/`, no
+tag** (`github:Pacific-Code-Labs/sokol-design-system#vX.Y.Z`). No build, no `dist/`, no
 GitHub Packages, no `.npmrc` token. `exports` point at `src/`; consumers compile it with their
 own Vite and scan `src/**` through the Tailwind preset's `dsContent`. CI
 (`.github/workflows/typecheck.yml`) only typechecks. Release = bump `version`, commit, tag,
@@ -98,10 +98,10 @@ DOM node), accepts `className` funnelled through `cn` (caller wins), and styles
 ONLY via Tailwind semantic-token classes (`bg-card`, `text-primary`,
 `ring-ring`) or `hsl(var(--token))` arbitrary values (e.g. the `--cat-*`/
 `--risk-*` Badge variants). NO hardcoded hex. Variants use `cva`. Do NOT import
-app CSS or app contexts — keep them portable across `fire-code-fe` and admin.
+app CSS or app contexts — keep them portable across `sokol` and admin.
 
 **Export surface** (`package.json` `exports`):
-- `@pacific-code-labs/fire-code-design-system` → `src/index.ts` (everything above).
+- `@pacific-code-labs/sokol-design-system` → `src/index.ts` (everything above).
 - `…/styles` (and `/tokens.css`) → `src/tokens/tokens.css`.
 - `…/tailwind-preset` → `tailwind.preset.js`.
 
@@ -141,7 +141,7 @@ Colours are **HSL channel triples** (no `hsl()` wrapper) → `hsl(var(--token))`
 
 The app (not this package) owns Tailwind mapping + utility classes
 (`.panel`, `.glow-red`, `.text-cat-*`, scrollbar/print styles). This package
-owns the **values**; when FCR-003 lands, `fire-code-fe/src/index.css` token
+owns the **values**; when FCR-003 lands, `sokol/src/index.css` token
 blocks become these defaults — do not fork them.
 
 ---
@@ -152,17 +152,17 @@ Highest wins:
 
 1. **OVERRIDE** — `setThemeId(id)` at runtime (e.g. theme gallery / live
    preview). Seeded from `initialThemeId` prop or `localStorage`
-   (`firecode.themeId`).
+   (`sokol.themeId`).
 2. **ORG / CMS theme** — `orgThemeId` prop, or `resolveOrgThemeId()` callback.
    The HOST supplies this from org config / the DXP `themes.json`. This package
    is app-agnostic — it never calls Cognito / TanStack Query / a CMS directly.
-3. **DEFAULT** — `DEFAULT_THEME_ID` (`"firecode"`).
+3. **DEFAULT** — `DEFAULT_THEME_ID` (`"sokol"`).
 
 Dark mode is host-supplied (`isDark` prop / `resolveIsDark()`), defaulting to
 **dark**. `applyTheme(themeId, isDark)` writes every `TOKEN_NAMES` entry +
 `--radius`/`--font-sans`/`--font-display` to `:root` and lazily injects the
-theme's Google Fonts (deduped by href). Seeded themes: `firecode` (default) and
-`firecode-light` (demo/alt). Add org/CMS themes in `themes.ts` keyed by stable
+theme's Google Fonts (deduped by href). Seeded themes: `sokol` (default) and
+`sokol-light` (demo/alt). Add org/CMS themes in `themes.ts` keyed by stable
 id (the same id stored in org config / `themes.json`).
 
 See `README.md` for consumer wiring (alias + dependency + `ThemeProvider`).
@@ -171,8 +171,8 @@ See `README.md` for consumer wiring (alias + dependency + `ThemeProvider`).
 
 ## 6. Roadmap upkeep — REQUIRED for every change
 
-**`E:\dev\fire-code-app\docs\roadmap\firecode_roadmap.md` is the single source
-of truth** for tracking all FireCode CR work across every repo (be, fe, agent,
+**`E:\dev\sokol-app\docs\roadmap\sokol_roadmap.md` is the single source
+of truth** for tracking all Sóköl work across every repo (be, fe, agent,
 admin, design-system). Treat it as a living document. After **any substantive
 change** in this repo you MUST:
 
@@ -181,7 +181,7 @@ change** in this repo you MUST:
    `Won't do`) and update the **Evidence / next step** cell with what landed and
    what remains.
 2. **Append a dated line to the §5 changelog** (date + short summary, e.g.
-   `2026-06-15: design-system — scaffolded @firecode/design-system (tokens + theme engine), FCR-003 In progress.`).
+   `2026-06-15: design-system — scaffolded @pacific-code-labs/sokol-design-system (tokens + theme engine), FCR-003 In progress.`).
 3. **Add a new `FCR-NNN` row** for newly discovered work — IDs are stable and
    never reused/renumbered. When splitting an item, keep the original ID on the
    parent and add child IDs (note lineage).

@@ -1,7 +1,7 @@
 /**
  * ThemeProvider / ThemeContext / useTheme.
  *
- * App-agnostic theme provider for the FireCode design system. It does NOT know
+ * App-agnostic theme provider for the Sóköl design system. It does NOT know
  * about Cognito, TanStack Query, or any specific CMS — the org/CMS theme value
  * is injected by the host via the `orgThemeId` prop (or the `resolveOrgThemeId`
  * callback), keeping this package free of app dependencies.
@@ -10,7 +10,7 @@
  *   1. OVERRIDE        — a runtime selection (`setThemeId`), e.g. theme gallery.
  *   2. ORG / CMS theme — `orgThemeId` prop or `resolveOrgThemeId()` result
  *                        (sourced by the host from org config / themes.json).
- *   3. DEFAULT         — `DEFAULT_THEME_ID` ("firecode").
+ *   3. DEFAULT         — `DEFAULT_THEME_ID` ("sokol").
  *
  * Dark mode is supplied by the host (`isDark` prop / `resolveIsDark`), since
  * each app already owns its light/dark toggle. Defaults to dark (product
@@ -35,7 +35,7 @@ import {
   type ThemeDef,
 } from "./themes";
 
-const STORAGE_KEY = "firecode.themeId";
+const STORAGE_KEY = "sokol.themeId";
 
 export interface ThemeContextValue {
   /** The active, resolved theme id (always a known id). */

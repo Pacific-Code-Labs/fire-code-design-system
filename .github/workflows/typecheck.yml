@@ -1,7 +1,7 @@
 name: Typecheck
 
 # The package ships TypeScript source (no build, no registry): consumers install a tag,
-# e.g. "github:Pacific-Code-Labs/fire-code-design-system#v0.2.0". CI only proves it compiles.
+# e.g. "github:Pacific-Code-Labs/sokol-design-system#v0.2.0". CI only proves it compiles.
 on:
   push:
     branches: [main]

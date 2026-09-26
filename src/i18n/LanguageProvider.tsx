@@ -92,7 +92,7 @@ export function LanguageProvider<L extends string>({
   translations,
   languages,
   defaultLanguage,
-  storageKey = "firecode-lang",
+  storageKey = "sokol-lang",
   urlPrefix = true,
   onChange,
 }: LanguageProviderProps<L>) {

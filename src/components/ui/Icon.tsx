@@ -8,7 +8,7 @@ import {
 import { cn } from "../../lib/cn";
 
 /**
- * Icon — the single, registry-driven resolver for FireCode iconography.
+ * Icon — the single, registry-driven resolver for Sóköl iconography.
  *
  * Per the Blue Book (FCR-002 §4): icons are `lucide-react`, resolved through a
  * registry by string name (`iconName` → component) so content/config can pick
@@ -118,7 +118,7 @@ export function resolveIcon(name: string): LucideIcon {
   if (isDev() && !warned.has(name)) {
     warned.add(name);
     // eslint-disable-next-line no-console
-    console.warn(`[FireCode Icon] unknown icon "${name}" — falling back to Flame.`);
+    console.warn(`[Sóköl Icon] unknown icon "${name}" — falling back to Flame.`);
   }
   return Flame;
 }

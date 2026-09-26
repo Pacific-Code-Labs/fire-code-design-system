@@ -5,7 +5,7 @@ import { cn } from "../../lib/cn";
 /**
  * Badge — compact status/category pill.
  *
- * Beyond the generic variants, FireCode ships brand-specific **domain** and
+ * Beyond the generic variants, Sóköl ships brand-specific **domain** and
  * **risk** variants that map directly to the Blue Book `--cat-*` / `--risk-*`
  * tokens (fire-protection category color-coding is semantic — §6). Soft
  * variants use a low-alpha tint of the hue with a matching foreground, the

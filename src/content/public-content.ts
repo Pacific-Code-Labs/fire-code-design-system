@@ -1,4 +1,4 @@
-// Anonymous reads from the public API (public-api.<domain>, fire-code-public-be).
+// Anonymous reads from the public API (public-api.<domain>, sokol-public-be).
 //
 // The public gateway is AWS_IAM: a visitor gets short-lived GUEST credentials from a Cognito
 // identity pool (no user pool, no sign-up) and signs each GET with SigV4. Everything here is
@@ -11,7 +11,7 @@
 // the first paint).
 
 export interface PublicApiConfig {
-  /** Base URL, e.g. https://public-api.fire-code.jcampos.dev */
+  /** Base URL, e.g. https://public-api.sokol.jcampos.dev */
   url: string;
   identityPoolId: string;
   region?: string;
@@ -25,8 +25,8 @@ interface GuestCredentials {
   expiration: number;
 }
 
-const CREDENTIALS_KEY = "firecode-public-guest";
-const ID_KEY = "firecode-public-identity";
+const CREDENTIALS_KEY = "sokol-public-guest";
+const ID_KEY = "sokol-public-identity";
 const encoder = new TextEncoder();
 
 function storage(kind: "local" | "session"): Storage | null {
@@ -150,7 +150,7 @@ export interface PublishedSite {
   documents: Record<string, unknown>;
 }
 
-const cacheKey = (site: string) => `firecode-content-${site}`;
+const cacheKey = (site: string) => `sokol-content-${site}`;
 
 /** The last published documents this browser saw (synchronous; null on a first visit). */
 export function cachedPublishedContent(site: "landing" | "app"): Record<string, unknown> | null {

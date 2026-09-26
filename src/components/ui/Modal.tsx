@@ -10,7 +10,7 @@ import { Button, type ButtonProps } from "./Button";
  * Modal — accessible centered dialog built on Radix `Dialog`.
  *
  * Radix gives focus-trapping, scroll-lock, Escape/overlay-close, and ARIA
- * wiring; FireCode supplies the instrument styling (token surfaces, a tinted
+ * wiring; Sóköl supplies the instrument styling (token surfaces, a tinted
  * variant icon "pill", a fire-orange focus ring) entirely from tokens. The
  * variant tints the header icon and drives a sensible default icon. Provide
  * `confirm`/`cancel` for the standard two-button footer, or compose freely via
