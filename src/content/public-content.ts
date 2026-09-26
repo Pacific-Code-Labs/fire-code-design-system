@@ -93,7 +93,21 @@ const encodeSegment = (segment: string) =>
   encodeURIComponent(segment).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
 
 /** SigV4-signed GET for API Gateway (service execute-api). */
-export async function signedPublicGet(config: PublicApiConfig, path: string, init: { signal?: AbortSignal } = {}): Promise<Response> {
+export function signedPublicGet(config: PublicApiConfig, path: string, init: { signal?: AbortSignal } = {}): Promise<Response> {
+  return signedPublicRequest(config, "GET", path, init);
+}
+
+/**
+ * SigV4-signed request for API Gateway (service execute-api) with identity-pool guest credentials.
+ * A `body` is sent as JSON and its hash is signed; the guest role decides which routes it may call.
+ */
+export async function signedPublicRequest(
+  config: PublicApiConfig,
+  method: "GET" | "POST",
+  path: string,
+  init: { body?: unknown; signal?: AbortSignal } = {},
+): Promise<Response> {
+  const body = init.body === undefined ? undefined : JSON.stringify(init.body);
   const credentials = await guestCredentials(config);
   const region = config.region ?? config.identityPoolId.split(":")[0];
   const url = new URL(path, config.url.replace(/\/+$/, "") + "/");
@@ -107,9 +121,9 @@ export async function signedPublicGet(config: PublicApiConfig, path: string, ini
     .join("&");
   const signedHeaders = "host;x-amz-date;x-amz-security-token";
   const canonicalRequest = [
-    "GET", canonicalUri, canonicalQuery,
+    method, canonicalUri, canonicalQuery,
     `host:${url.host}\nx-amz-date:${amzDate}\nx-amz-security-token:${credentials.sessionToken}\n`,
-    signedHeaders, await sha256(""),
+    signedHeaders, await sha256(body ?? ""),
   ].join("\n");
   const scope = `${date}/${region}/execute-api/aws4_request`;
   const stringToSign = ["AWS4-HMAC-SHA256", amzDate, scope, await sha256(canonicalRequest)].join("\n");
@@ -117,9 +131,11 @@ export async function signedPublicGet(config: PublicApiConfig, path: string, ini
   for (const part of [region, "execute-api", "aws4_request"]) key = await hmac(key, part);
   const signature = hex(await hmac(key, stringToSign));
   return fetch(url.toString(), {
-    method: "GET",
+    method,
+    body,
     signal: init.signal,
     headers: {
+      ...(body === undefined ? {} : { "Content-Type": "application/json" }),
       "X-Amz-Date": amzDate,
       "X-Amz-Security-Token": credentials.sessionToken,
       Authorization: `AWS4-HMAC-SHA256 Credential=${credentials.accessKeyId}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,
