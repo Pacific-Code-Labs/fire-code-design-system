@@ -8,8 +8,8 @@ Used by the three frontends of the workspace (`Sokol-CR/fe/*`):
 
 | Consumer | Repo | Host |
 |---|---|---|
-| landing | `sokol` | `fire-code.jcampos.dev` |
-| app | `sokol-app` | `app.fire-code.jcampos.dev` |
+| landing | `sokol` | `sokol.jcampos.dev` |
+| app | `sokol-app` | `app.sokol.jcampos.dev` |
 | admin | `sokol-admin` (private) | `admin.sokol.jcampos.dev` |
 
 ## Install (TypeScript source from a git tag)
